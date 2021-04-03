@@ -1,8 +1,82 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    ViewData["Title"] = "Prochaine Fermeture";
+
+    BoatModel info = ViewData["Info0"] as BoatModel;
+
+    string GetTime(DateTime time)
+    {
+        TimeSpan timeSpan = time.Subtract(DateTime.Now);
+        return GetTimeSpan(timeSpan);
+    }
+
+    string GetTimeSpan(TimeSpan timeSpan)
+    {
+        return string.Format(
+            "{0}, {1} {2} et {3}",
+            Clean(timeSpan.Days, "jours"),
+            Clean(timeSpan.Hours, "heures"),
+            Clean(timeSpan.Minutes, "minutes"),
+            Clean(timeSpan.Seconds, "secondes")
+            );
+    }
+
+    string Clean(int amount, string mot)
+    {
+        return string.Format("{0} {1}{2}", amount, mot, "");
+    }
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<script>
+    function getTimeClose() {
+        var date = new Date(toLocalDate("@info.ClosingDate"));
+        var d = getTime(date - Date.now());
+        return (d.days, "jours") + ", " + (d.hours, "heures") + " " + (d.minutes, "minutes") + " et " + (d.seconds, "secondes");
+    }
+    function getTime(d) {
+        var time = d / 1000;
+        var days = Math.floor(time / 86400);
+        time -= days * 86400;
+        var hours = Math.floor(time / 3600) % 24;
+        time -= hours * 3600;
+        var minutes = Math.floor(time / 60) % 60;
+        time -= minutes * 60;
+        var seconds = Math.floor(time);
+        return {
+            days: days,
+            hours: hours,
+            minutes: minutes,
+            seconds: seconds
+        };
+    }
+    function toLocalDate(date) {
+        var res = date.split("/");
+        return res[1] + "/" + res[0] + "/" + res[2];
+    }
+</script>
+
+<h1>Pont Chaban Delmas</h1>
+<h2>Prochaine fermeture</h2>
+
+<table>
+    <tbody>
+        <tr>
+            <td>fermeture le : </td>
+            <td>@info.ClosingDate.ToString("dddd dd MMMM yyyy à HH:mm")</td>
+        </tr>
+        <tr>
+            <td>réouverture</td>
+            <td>@info.ReopeningDate.ToString("dddd dd MMMM yyyy à HH:mm")</span></td>
+        </tr>
+        <tr>
+            <td>nom du bateau</td>
+            <td>@info.BoatName</td>
+        </tr>
+        <tr>
+            <td>durée de la prochaine fermeture</td>
+            <td>@GetTimeSpan(info.ReopeningDate.Subtract(info.ClosingDate))</td>
+        </tr>
+
+    </tbody>
+</table>
+
+
