@@ -2,8 +2,84 @@
 @{
     ViewData["Title"] = "toutes les fermetures";
 
+    List<BoatModel> closing = ViewData["Info1"] as List<BoatModel>;
+    List<BoatModel> closingEnded = new List<BoatModel>();
+
+    closing.Sort((s1, s2) => DateTimeOffset.Compare(s1.ClosingDate, s2.ClosingDate));
+    closingEnded.Sort((s1, s2) => DateTimeOffset.Compare(s1.ClosingDate, s2.ClosingDate));
+
+    for (int i = 0; i < closing.Count; i++)
+    {
+        if (closing[i].ClosingDate.CompareTo(DateTime.Now) < 0)
+        {
+            closingEnded.Add(closing[i]);
+            closing.RemoveAt(i);
+        }
+    }
+
+    string GetTime(BoatModel info)
+    {
+        TimeSpan timeSpan = info.ReopeningDate.Subtract(info.ClosingDate);
+        return string.Format(
+            "{0}, {1} {2} et {3}",
+            Clean(timeSpan.Days, "jours"),
+            Clean(timeSpan.Hours, "heures"),
+            Clean(timeSpan.Minutes, "minutes"),
+            Clean(timeSpan.Seconds, "secondes")
+            );
+    }
+
+    string Clean(int amount, string mot)
+    {
+        return string.Format("{0} {1}{2}", amount, mot, "");
+    }
+
 }
 
-<h1>toutes les fermetures</h1>
+<h1>toutes les fermetures du pont</h1>
 
-<p>test</p>
+<h2>fermetures à venir</h2>
+
+<table>
+    <tbody>
+        @for (int i = 0; i < closing.Count; i++)
+        {
+            <tr>
+                <td>nom du bateau : </td>
+                <td>@closing[i].BoatName</td>
+            </tr>
+            <tr>
+                <td>horaires de la prochaine fermeture : </td>
+                <td>@closing[i].ClosingDate.ToString("dddd dd MMMM yyyy à HH:mm")</td>
+            </tr>
+            <tr>
+                <td>durée de LA PROCHAINE FERMETURE : </td>
+                <td>@GetTime(closing[i])</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<br />
+
+<h2>fermetures déjà passées</h2>
+
+<table>
+    <tbody>
+        @for (int i = 0; i < closingEnded.Count; i++)
+        {
+            <tr>
+                <td>nom du bateau : </td>
+                <td>@closingEnded[i].BoatName</td>
+            </tr>
+            <tr>
+                <td>horaires de la fermeture : </td>
+                <td>@closingEnded[i].ClosingDate.ToString("dddd dd MMMM yyyy à HH:mm")</td>
+            </tr>
+            <tr>
+                <td>durée de la fermeture : </td>
+                <td>@GetTime(closingEnded[i])</td>
+            </tr>
+        }
+    </tbody>
+</table>

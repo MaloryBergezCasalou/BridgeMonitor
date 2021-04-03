@@ -57,6 +57,8 @@
 <h1>Pont Chaban Delmas</h1>
 <h2>Prochaine fermeture</h2>
 
+<br />
+
 <table>
     <tbody>
         <tr>
@@ -64,15 +66,15 @@
             <td>@info.ClosingDate.ToString("dddd dd MMMM yyyy à HH:mm")</td>
         </tr>
         <tr>
-            <td>réouverture</td>
+            <td>réouverture : </td>
             <td>@info.ReopeningDate.ToString("dddd dd MMMM yyyy à HH:mm")</span></td>
         </tr>
         <tr>
-            <td>nom du bateau</td>
+            <td>nom du bateau : </td>
             <td>@info.BoatName</td>
         </tr>
         <tr>
-            <td>durée de la prochaine fermeture</td>
+            <td>durée de la prochaine fermeture : </td>
             <td>@GetTimeSpan(info.ReopeningDate.Subtract(info.ClosingDate))</td>
         </tr>
 
